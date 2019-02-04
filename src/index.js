@@ -1,3 +1,4 @@
+console.log('DEBUG:', process.env.DEBUG);
 const app = require('express')();
 const bodyParser = require('body-parser');
 const cors = require('cors');
