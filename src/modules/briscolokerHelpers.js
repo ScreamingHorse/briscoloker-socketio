@@ -3,6 +3,7 @@ const resolveHand = require('./briscoloker/resolveHand');
 const startTheGameWillYa = require('./briscoloker/startTheGameWillYa');
 const betting = require('./briscoloker/betting');
 const getMyGameBro = require('./briscoloker/getMyGameBro');
+const getMyWaitingGameBro = require('./briscoloker/getMyWaitingGameBro');
 const playACard = require('./briscoloker/playACard');
 const fold = require('./briscoloker/fold');
 
@@ -87,6 +88,7 @@ const sendAllTheGameStates = async (io, gameName, mongoClient) => {
 
 module.exports = {
   getMyGameBro,
+  getMyWaitingGameBro,
   getVillan,
   updateHero,
   startTheGameWillYa,

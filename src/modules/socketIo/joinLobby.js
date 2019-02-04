@@ -24,6 +24,12 @@ module.exports = async (socket, io, mongoClient, token) => {
       io.to(playersGame.name).emit('match_ready');
       return;
     }
+    // check if the player is already looking for a game
+    const waitingGame = await briscolokerHelpers.getMyWaitingGameBro(token, mongoClient);
+    if (waitingGame !== null) {
+      socket.join(waitingGame.name);
+      return;
+    }
     // (try to) find an open room
     const openRooms = await mongoClient.getStuffFromMongo(
       'openRooms',
