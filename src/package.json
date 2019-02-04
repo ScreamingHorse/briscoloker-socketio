@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "briscoloker-socketio",
   "version": "1.0.0",
   "description": "Backend services for the briscoloker",
   "main": "index.js",
@@ -25,5 +25,8 @@
     "restartable": "rs",
     "verbose": true,
     "delay": "1500"
+  },
+  "engines": {
+    "node": "10.15"
   }
 }
