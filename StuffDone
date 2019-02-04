@@ -90,4 +90,8 @@ Todo:
 
 Day 16
 
-Fized the re-login and re-join issue
+Fixed the re-login and re-join issue
+Deployed to Heroku (not working because the DB doesn't exist ...)
+
+Todo:
+ - Create a mongodb deployment
