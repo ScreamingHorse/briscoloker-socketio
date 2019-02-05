@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "run:dev": "NODE_ENV=dev PORT=3001 DEBUG=briscoloker:playACard MONGO_CONNECTION_STRING=localhost:27017 nodemon src/index.js",
+    "run:dev": "NODE_ENV=dev PORT=3001 DEBUG=briscoloker:* MONGO_CONNECTION_STRING=mongodb://localhost:27017 nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

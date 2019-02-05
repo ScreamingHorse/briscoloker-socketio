@@ -11,7 +11,7 @@ app.use(bodyParser());
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const debug = require('debug')('briscoloker:index');
-const briscolokerMongoClient = require('./modules/mongoDbHelpers')(`mongodb://${process.env.MONGO_CONNECTION_STRING}`);
+const briscolokerMongoClient = require('./modules/mongoDbHelpers')(`${process.env.MONGO_CONNECTION_STRING}`);
 
 // SOCKET.IO Modules
 const joinLobby = require('./modules/socketIo/joinLobby');
