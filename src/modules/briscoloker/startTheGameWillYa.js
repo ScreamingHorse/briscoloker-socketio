@@ -25,7 +25,7 @@ module.exports = async (roomName, mongoClient) => {
       playerObject.score = 0;
       // Reset the chips only if it is the first round
       if (game.round === 1) {
-        playerObject.chips = 100;
+        playerObject.chips = 1500;
       }
     });
     // deck
