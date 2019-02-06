@@ -12,6 +12,7 @@ module.exports = async (roomName, mongoClient) => {
     game.isTheRoundFinished = false;
     game.winnerOfTheWholeThing = null;
     game.lastRoundWinner = '';
+    game.timer = 30;
     // update the players
     game.players.forEach((playerObject) => {
       playerObject.cardsCaptured = [];

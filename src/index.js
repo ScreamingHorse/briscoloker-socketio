@@ -90,8 +90,54 @@ app.get('/past_games', async (req, res) => {
     .json(response);
 });
 
+const timers = [];
+
+// this interval update all the timers for all existing games
+// the timers are part of the game object
+setInterval(async () => {
+  const games = await briscolokerMongoClient.getLimitlessStuffFromMongo(
+    'games',
+    { timer: { $gt: -1 } },
+    {},
+    {},
+    {
+      projection: { timer: 1, name: 1 },
+    },
+  );
+  games.forEach(async (T) => {
+    debug(T.timer, T.name, T._id);
+    T.timer--;
+    if (T.timer < 0) {
+      // call the timeout logic
+      // 1. get the token of the timed out player
+      const player = T.players.filter(P => P.initiative);
+      // debug(player);
+      const { isBettingPhase, bettingRound } = T.currentHand;
+      if (isBettingPhase) {
+        if (bettingRound === 1) {
+          debug('Betting 0', bettingRound);
+          // first round of betting, so check
+          await betting(io, briscolokerMongoClient, player[0].id, 0);
+        } else {
+          // need to fold
+          debug('Folding', bettingRound);
+          await fold(io, briscolokerMongoClient, player[0].id);
+        }
+      } else {
+        // playing round - Play the first card
+        await playACard(io, briscolokerMongoClient, player[0].id, player[0].hand[0]);
+      }
+    } else {
+      debug(`emit: 'timer' to ${T.name}, ${T.timer}`);
+      io.sockets.in(T.name).emit('timer', T.timer);
+      // @TODO: REFACTOR THIS IN A BETTER WAY
+      await briscolokerMongoClient.updateOneByObjectId('games', T._id, T);
+    }
+  });
+}, 1000);
+
 io.on('connection', (socket) => {
-  console.log('a user is connected', socket.id);
+  console.log('a user is connected', socket.id, timers);
   debug('Query string of the socket', socket.handshake.query);
   socket.token = socket.handshake.query.token;
 

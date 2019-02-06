@@ -91,6 +91,8 @@ module.exports = async (token, mongoClient, bet) => {
     debug('Villan chips === 0', villan.chips);
     currentHand.isBettingPhase = false;
   }
-  // 7 save the state of the game into mongo
+  // 7. update the timer
+  game.timer = 30;
+  // 8 save the state of the game into mongo
   await mongoClient.updateOneByObjectId('games', game._id, game);
 };

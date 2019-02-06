@@ -50,9 +50,12 @@ module.exports = async (token, mongoClient, card) => {
   hero.initiative = false;
   villan.initiative = true;
 
-  // 3. save the state of the game into mongo
+  // 3. reset the timer
+  game.timer = 30;
+
+  // 4. save the state of the game into mongo
   await mongoClient.updateOneByObjectId('games', game._id, game);
 
-  // 4. return game
+  // 5. return game
   return game;
 };

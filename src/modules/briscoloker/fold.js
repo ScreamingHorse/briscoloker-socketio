@@ -22,6 +22,8 @@ module.exports = async (token, mongoClient) => {
   villan.initiative = true;
   // 3. villan win the hand
   currentHand.winner = villan.id;
-  // 4. save the state of the game into mongo
+  // 4. update the timer
+  game.timer = 30;
+  // 5. save the state of the game into mongo
   await mongoClient.updateOneByObjectId('games', game._id, game);
 };

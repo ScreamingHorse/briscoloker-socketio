@@ -64,7 +64,7 @@ const formatOutput = async (token, mongoClient) => {
       round: game.round,
     },
   };
-  return gameState;
+  return { gameState, roomName: game.name };
 };
 
 const sendAllTheGameStates = async (io, gameName, mongoClient) => {
@@ -78,7 +78,7 @@ const sendAllTheGameStates = async (io, gameName, mongoClient) => {
       debug(clientToken);
       const gameState = await formatOutput(clientToken, mongoClient);
       // console.log('gameState',gameState);
-      client.emit('game_state', { result: gameState });
+      client.emit('game_state', { result: gameState.gameState });
     }
   } catch (e) {
     console.error(e);

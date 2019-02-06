@@ -44,11 +44,14 @@ class BriscolokerMongo {
     });
   }
 
-  getLimitlessStuffFromMongo(collection, filter, sorted) {
+  getLimitlessStuffFromMongo(collection, filter, sorted, options) {
+    if (typeof options === 'undefined') {
+      options = {};
+    }
     return new Promise(async (resolve, reject) => {
       const connection = await this.connect();
       connection.collection(collection)
-        .find(filter)
+        .find(filter, options)
         .sort(sorted)
         .toArray((err, results) => {
           if (err) {
