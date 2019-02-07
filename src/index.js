@@ -105,7 +105,7 @@ setInterval(async () => {
     },
   );
   games.forEach(async (T) => {
-    debug(T.timer, T.name, T._id);
+    // debug(T.timer, T.name, T._id);
     T.timer--;
     if (T.timer < 0) {
       // call the timeout logic
@@ -115,12 +115,12 @@ setInterval(async () => {
       const { isBettingPhase, bettingRound } = T.currentHand;
       if (isBettingPhase) {
         if (bettingRound === 1) {
-          debug('Betting 0', bettingRound);
+          // debug('Betting 0', bettingRound);
           // first round of betting, so check
           await betting(io, briscolokerMongoClient, player[0].id, 0);
         } else {
           // need to fold
-          debug('Folding', bettingRound);
+          // debug('Folding', bettingRound);
           await fold(io, briscolokerMongoClient, player[0].id);
         }
       } else {
@@ -128,7 +128,7 @@ setInterval(async () => {
         await playACard(io, briscolokerMongoClient, player[0].id, player[0].hand[0]);
       }
     } else {
-      debug(`emit: 'timer' to ${T.name}, ${T.timer}`);
+      // debug(`emit: 'timer' to ${T.name}, ${T.timer}`);
       io.sockets.in(T.name).emit('timer', T.timer);
       // @TODO: REFACTOR THIS IN A BETTER WAY
       await briscolokerMongoClient.updateOneByObjectId('games', T._id, T);
