@@ -37,6 +37,7 @@ const formatOutput = async (token, mongoClient) => {
   const villan = game.players.filter(P => P.id !== token)[0];
   const hero = game.players.filter(P => P.id === token)[0];
   const gameState = {
+    timer: game.timer,
     logs: game.logs,
     villan: villan ? {
       name: villan.name ? villan.name : '',

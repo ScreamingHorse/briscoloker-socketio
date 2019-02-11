@@ -92,7 +92,7 @@ module.exports = async (token, mongoClient, bet) => {
     currentHand.isBettingPhase = false;
   }
   // 7. update the timer
-  game.timer = 30;
+  game.timer = new Date().getTime();
   // 8 save the state of the game into mongo
   await mongoClient.updateOneByObjectId('games', game._id, game);
 };

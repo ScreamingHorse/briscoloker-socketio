@@ -51,7 +51,7 @@ module.exports = async (token, mongoClient, card) => {
   villan.initiative = true;
 
   // 3. reset the timer
-  game.timer = 30;
+  game.timer = new Date().getTime();
 
   // 4. save the state of the game into mongo
   await mongoClient.updateOneByObjectId('games', game._id, game);

@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "run:dev": "FEATURE_REGISTRATION=on NODE_ENV=dev PORT=3001 DEBUG=briscoloker:briscolokerHelpers:resolveHand MONGO_CONNECTION_STRING=mongodb://localhost:27017 nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "run:dev": "FEATURE_REGISTRATION=on NODE_ENV=dev PORT=3001 DEBUG=briscoloker:index MONGO_CONNECTION_STRING=mongodb://localhost:27017 nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build" : "yarn build && aws s3 sync build/ s3://briscoloker.screaminghorse.com --delete"
   },
   "author": "",
   "license": "ISC",

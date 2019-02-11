@@ -246,7 +246,7 @@ module.exports = async (gameName, mongoClient) => {
   debug('game.winnerOfTheWholeThing', game.winnerOfTheWholeThing);
 
   // 3. reset the timer
-  game.timer = 30;
+  game.timer = new Date().getTime();
 
   // 4 save the state of the game into mongo
   await mongoClient.updateOneByObjectId('games', game._id, game);

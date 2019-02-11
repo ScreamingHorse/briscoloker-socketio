@@ -95,46 +95,39 @@ const timers = [];
 // this interval update all the timers for all existing games
 // the timers are part of the game object
 setInterval(async () => {
+  const cutoff = (new Date().getTime() - (50 * 1000)); // we multipli by 100 to get the seconds
+  // debug('cutoff', cutoff);
   const games = await briscolokerMongoClient.getLimitlessStuffFromMongo(
     'games',
-    { timer: { $gt: -1 } },
+    { timer: { $lt: cutoff } },
     {},
     {},
-    {
-      projection: { timer: 1, name: 1 },
-    },
   );
+  // debug('games', games.length);
   games.forEach(async (T) => {
     // debug(T.timer, T.name, T._id);
-    T.timer--;
-    if (T.timer < 0) {
-      // call the timeout logic
-      // 1. get the token of the timed out player
-      const player = T.players.filter(P => P.initiative);
-      // debug(player);
-      const { isBettingPhase, bettingRound } = T.currentHand;
-      if (isBettingPhase) {
-        if (bettingRound === 1) {
-          // debug('Betting 0', bettingRound);
-          // first round of betting, so check
-          await betting(io, briscolokerMongoClient, player[0].id, 0);
-        } else {
-          // need to fold
-          // debug('Folding', bettingRound);
-          await fold(io, briscolokerMongoClient, player[0].id);
-        }
+    // call the timeout logic
+    // 1. get the token of the timed out player
+    const player = T.players.filter(P => P.initiative);
+    // debug(player);
+    const { isBettingPhase, bettingRound } = T.currentHand;
+    if (isBettingPhase) {
+      if (bettingRound === 1) {
+        // debug('Betting 0', bettingRound);
+        // first round of betting, so check
+        await betting(io, briscolokerMongoClient, player[0].id, 0);
       } else {
-        // playing round - Play the first card
-        await playACard(io, briscolokerMongoClient, player[0].id, player[0].hand[0]);
+        // need to fold
+        // debug('Folding', bettingRound);
+        await fold(io, briscolokerMongoClient, player[0].id);
       }
     } else {
-      // debug(`emit: 'timer' to ${T.name}, ${T.timer}`);
-      io.sockets.in(T.name).emit('timer', T.timer);
-      // @TODO: REFACTOR THIS IN A BETTER WAY
-      await briscolokerMongoClient.updateOneByObjectId('games', T._id, T);
+      // playing round - Play the first card
+      await playACard(io, briscolokerMongoClient, player[0].id, player[0].hand[0]);
     }
   });
-}, 1000);
+}, 5000);
+// @Todo: verify that the timer every 5 seconds is good enough
 
 io.on('connection', (socket) => {
   console.log('a user is connected', socket.id, timers);

@@ -12,7 +12,7 @@ module.exports = async (roomName, mongoClient) => {
     game.isTheRoundFinished = false;
     game.winnerOfTheWholeThing = null;
     game.lastRoundWinner = '';
-    game.timer = 30;
+    game.timer = new Date().getTime();
     // update the players
     game.players.forEach((playerObject) => {
       playerObject.cardsCaptured = [];
@@ -21,7 +21,7 @@ module.exports = async (roomName, mongoClient) => {
       playerObject.initiative = false;
       playerObject.currentHand = {
         bets: 0,
-        playedCard : null,
+        playedCard: null,
       };
       playerObject.score = 0;
       // Reset the chips only if it is the first round

@@ -23,7 +23,7 @@ module.exports = async (token, mongoClient) => {
   // 3. villan win the hand
   currentHand.winner = villan.id;
   // 4. update the timer
-  game.timer = 30;
+  game.timer = new Date().getTime();
   // 5. save the state of the game into mongo
   await mongoClient.updateOneByObjectId('games', game._id, game);
 };
