@@ -111,6 +111,21 @@ class BriscolokerMongo {
           });
     });
   }
+
+  deleteManyThingsBySearchObject(collection, searchObject) {
+    return new Promise(async (resolve, reject) => {
+      const connection = await this.connect();
+      connection.collection(collection)
+        .deleteMany(searchObject,
+          (err) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(true);
+            }
+          });
+    });
+  }
 }
 
 module.exports = connectionString => new BriscolokerMongo(connectionString);

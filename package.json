@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "run:dev": "FEATURE_REGISTRATION=on NODE_ENV=dev PORT=3001 DEBUG=briscoloker:index MONGO_CONNECTION_STRING=mongodb://localhost:27017 nodemon src/index.js",
+    "run:dev": "FEATURE_REGISTRATION=on NODE_ENV=dev PORT=3001 DEBUG=briscoloker:validateToken MONGO_CONNECTION_STRING=mongodb://localhost:27017 nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build" : "yarn build && aws s3 sync build/ s3://briscoloker.screaminghorse.com --delete"
+    "build": "yarn build && aws s3 sync build/ s3://briscoloker.screaminghorse.com --delete"
   },
   "author": "",
   "license": "ISC",
@@ -18,7 +18,8 @@
     "express": "^4.16.4",
     "mongodb": "^3.1.12",
     "pbkdf2": "^3.0.17",
-    "socket.io": "^2.2.0"
+    "socket.io": "^2.2.0",
+    "uuid": "^3.3.2"
   },
   "nodemonConfig": {
     "ignore": [

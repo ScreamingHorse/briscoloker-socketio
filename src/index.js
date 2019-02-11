@@ -19,6 +19,7 @@ const reconnectMe = require('./modules/socketIo/reconnectMe');
 const betting = require('./modules/socketIo/betting');
 const playACard = require('./modules/socketIo/playACard');
 const fold = require('./modules/socketIo/fold');
+const validateToken = require('./modules/socketIo/validateToken');
 
 // API Modules
 const registerUser = require('./modules/API/registerUser');
@@ -129,46 +130,52 @@ setInterval(async () => {
 }, 5000);
 // @Todo: verify that the timer every 5 seconds is good enough
 
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
   console.log('a user is connected', socket.id, timers);
   debug('Query string of the socket', socket.handshake.query);
-  socket.token = socket.handshake.query.token;
+  socket.token = await validateToken(briscolokerMongoClient, socket.handshake.query.token, io, socket);
 
   // triggered on reconnection
   socket.on('reconnect_me', async (payload) => {
     console.log('message for reconnect_me payload', payload);
-    await reconnectMe(socket, briscolokerMongoClient, payload.token);
+    const userId = await validateToken(briscolokerMongoClient, payload.token, io, socket);
+    if (userId !== null) await reconnectMe(socket, briscolokerMongoClient, userId);
   });
 
   // triggered when the browser goes to /game
   socket.on('table_ready', async (payload) => {
     console.log('message for table_ready payload', payload);
-    await tableReady(socket, briscolokerMongoClient, payload.token);
+    const userId = await validateToken(briscolokerMongoClient, payload.token, io, socket);
+    if (userId !== null) await tableReady(socket, briscolokerMongoClient, userId);
   });
 
   // triggerred when the player press play
   socket.on('join_lobby', async (payload) => {
     // @todo: validate the tokens
     console.log('message for join_lobby', payload);
-    await joinLobby(socket, io, briscolokerMongoClient, payload.token);
+    const userId = await validateToken(briscolokerMongoClient, payload.token, io, socket);
+    if (userId !== null) await joinLobby(socket, io, briscolokerMongoClient, userId);
   });
 
   // the client send a message when the player is betting
   socket.on('betting', async (payload) => {
     console.log('message for betting', payload);
-    await betting(io, briscolokerMongoClient, payload.token, payload.bet);
+    const userId = await validateToken(briscolokerMongoClient, payload.token, io, socket);
+    await betting(io, briscolokerMongoClient, userId, payload.bet);
   });
 
   // the client send a message when the player folds
   socket.on('fold', async (payload) => {
     console.log('message for fold', payload);
-    await fold(io, briscolokerMongoClient, payload.token);
+    const userId = await validateToken(briscolokerMongoClient, payload.token, io, socket);
+    await fold(io, briscolokerMongoClient, userId);
   });
 
   // the client send a message when the player plays a card
   socket.on('play_a_card', async (payload) => {
     console.log('message for play_a_card', payload);
-    await playACard(io, briscolokerMongoClient, payload.token, payload.card);
+    const userId = await validateToken(briscolokerMongoClient, payload.token, io, socket);
+    await playACard(io, briscolokerMongoClient, userId, payload.card);
   });
 });
 

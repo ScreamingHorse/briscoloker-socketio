@@ -102,5 +102,5 @@ Day 19
 Changed the timer, now storing the start second of it. Optimized the behaviour onTimer.
 Put the timer inside the main game object (se we don't need a different topic)
 
-
 Todo: 
+ - Validate on a middleware (io.use())
