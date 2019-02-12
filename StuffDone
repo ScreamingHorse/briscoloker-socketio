@@ -102,5 +102,9 @@ Day 19
 Changed the timer, now storing the start second of it. Optimized the behaviour onTimer.
 Put the timer inside the main game object (se we don't need a different topic)
 
+Issues:
+ - It seems that after 30ish card it keeps playing but with only 1 cards per hand
+ - TypeError: Cannot read property 'sockets' of undefined at Object.sendAllTheGameStates (/Volumes/Data/Projects/screamingHorseEntretainment/stream/B/briscoloker-socketio/src/modules/briscolokerHelpers.js:73:68)
+
 Todo: 
  - Validate on a middleware (io.use())
