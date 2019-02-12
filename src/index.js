@@ -96,15 +96,16 @@ const timers = [];
 // this interval update all the timers for all existing games
 // the timers are part of the game object
 setInterval(async () => {
-  const cutoff = (new Date().getTime() - (50 * 1000)); // we multipli by 100 to get the seconds
+  const cutoff = (new Date().getTime() - (30 * 1000)); // * 1000 to get the seconds
+  const cutoffHuman = (new Date().getTime() - (5 * 60 * 1000));
   // debug('cutoff', cutoff);
   const games = await briscolokerMongoClient.getLimitlessStuffFromMongo(
     'games',
-    { timer: { $lt: cutoff } },
+    { $and : [ { timer: { '$lt': cutoff } }, { lastHumanMove: {'$gt': cutoffHuman} }] },
     {},
     {},
   );
-  // debug('games', games.length);
+  //console.log('games', games.length);
   games.forEach(async (T) => {
     // debug(T.timer, T.name, T._id);
     // call the timeout logic
@@ -116,15 +117,15 @@ setInterval(async () => {
       if (bettingRound === 1) {
         // debug('Betting 0', bettingRound);
         // first round of betting, so check
-        await betting(io, briscolokerMongoClient, player[0].id, 0);
+        await betting(io, briscolokerMongoClient, player[0].id, 0, false);
       } else {
         // need to fold
         // debug('Folding', bettingRound);
-        await fold(io, briscolokerMongoClient, player[0].id);
+        await fold(io, briscolokerMongoClient, player[0].id, false);
       }
     } else {
       // playing round - Play the first card
-      await playACard(io, briscolokerMongoClient, player[0].id, player[0].hand[0]);
+      await playACard(io, briscolokerMongoClient, player[0].id, player[0].hand[0], false);
     }
   });
 }, 5000);
@@ -133,7 +134,12 @@ setInterval(async () => {
 io.on('connection', async (socket) => {
   console.log('a user is connected', socket.id, timers);
   debug('Query string of the socket', socket.handshake.query);
-  socket.token = await validateToken(briscolokerMongoClient, socket.handshake.query.token, io, socket);
+  socket.token = await validateToken(
+    briscolokerMongoClient,
+    socket.handshake.query.token,
+    io,
+    socket,
+  );
 
   // triggered on reconnection
   socket.on('reconnect_me', async (payload) => {
@@ -161,21 +167,21 @@ io.on('connection', async (socket) => {
   socket.on('betting', async (payload) => {
     console.log('message for betting', payload);
     const userId = await validateToken(briscolokerMongoClient, payload.token, io, socket);
-    await betting(io, briscolokerMongoClient, userId, payload.bet);
+    if (userId !== null) await betting(io, briscolokerMongoClient, userId, payload.bet, true);
   });
 
   // the client send a message when the player folds
   socket.on('fold', async (payload) => {
     console.log('message for fold', payload);
     const userId = await validateToken(briscolokerMongoClient, payload.token, io, socket);
-    await fold(io, briscolokerMongoClient, userId);
+    if (userId !== null) await fold(io, briscolokerMongoClient, userId, true);
   });
 
   // the client send a message when the player plays a card
   socket.on('play_a_card', async (payload) => {
     console.log('message for play_a_card', payload);
     const userId = await validateToken(briscolokerMongoClient, payload.token, io, socket);
-    await playACard(io, briscolokerMongoClient, userId, payload.card);
+    if (userId !== null) await playACard(io, briscolokerMongoClient, userId, payload.card, true);
   });
 });
 

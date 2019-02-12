@@ -1,7 +1,7 @@
 const debug = require('debug')('briscoloker:fold');
 const briscolokerHelpers = require('../briscolokerHelpers');
 
-module.exports = async (io, mongoClient, token) => {
+module.exports = async (io, mongoClient, token, isHuman) => {
   try {
     // 1 check if the token can bet
     const game = await briscolokerHelpers.getMyGameBro(token, mongoClient);
@@ -12,7 +12,7 @@ module.exports = async (io, mongoClient, token) => {
     // The player can bet if he's got the initiative and the game is in betting phase
     if (player.initiative && game.currentHand.isBettingPhase) {
       debug('token', token);
-      await briscolokerHelpers.fold(token, mongoClient);
+      await briscolokerHelpers.fold(token, mongoClient, isHuman);
     }
     // 3  send the specifc game state to each player
     await briscolokerHelpers.sendAllTheGameStates(io, game.name, mongoClient);

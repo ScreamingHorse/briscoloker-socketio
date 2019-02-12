@@ -1,7 +1,7 @@
 const debug = require('debug')('briscoloker:briscolokerHelpers:playACard');
 const getMyGameBro = require('./getMyGameBro');
 
-module.exports = async (token, mongoClient, card) => {
+module.exports = async (token, mongoClient, card, isHuman) => {
   const suitMap = [
     'Bats',
     'Cups',
@@ -52,6 +52,8 @@ module.exports = async (token, mongoClient, card) => {
 
   // 3. reset the timer
   game.timer = new Date().getTime();
+  // 3.1 if human, update timeout
+  if (isHuman) game.lastHumanMove = new Date().getTime();
 
   // 4. save the state of the game into mongo
   await mongoClient.updateOneByObjectId('games', game._id, game);

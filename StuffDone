@@ -108,3 +108,9 @@ Issues:
 
 Todo: 
  - Validate on a middleware (io.use())
+
+ Day 20
+
+Improved timeout
+Fixed the API for past games to work with the new token strategy
+Reduced the ammount of logs for a single game to 25 (to avoind slowing down the dom)

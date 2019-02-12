@@ -1,7 +1,7 @@
 const debug = require('debug')('briscoloker:playACard');
 const briscolokerHelpers = require('../briscolokerHelpers');
 
-module.exports = async (io, mongoClient, token, card) => {
+module.exports = async (io, mongoClient, token, card, isHuman) => {
   try {
     // 1 check if the token can bet
     let game = await briscolokerHelpers.getMyGameBro(token, mongoClient);
@@ -13,7 +13,7 @@ module.exports = async (io, mongoClient, token, card) => {
     // and that we are not in the betting phase
     const cardInHand = player.hand.filter(C => C.suit === card.suit && C.value === card.value);
     if (player.initiative && !game.currentHand.isBettingPhase && cardInHand.length === 1) {
-      game = await briscolokerHelpers.playACard(token, mongoClient, card);
+      game = await briscolokerHelpers.playACard(token, mongoClient, card, isHuman);
     }
     // 3 send the specifc game state to each player
     await briscolokerHelpers.sendAllTheGameStates(io, game.name, mongoClient);

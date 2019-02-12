@@ -1,7 +1,7 @@
 const debug = require('debug')('briscoloker:briscolokerHelpers:betting');
 const getMyGameBro = require('./getMyGameBro');
 
-module.exports = async (token, mongoClient, bet) => {
+module.exports = async (token, mongoClient, bet, isHuman) => {
   // get the game
   debug('token', token);
   debug('bet', bet);
@@ -93,6 +93,9 @@ module.exports = async (token, mongoClient, bet) => {
   }
   // 7. update the timer
   game.timer = new Date().getTime();
+  // 7.1 if human, update timeout
+  if (isHuman) game.lastHumanMove = new Date().getTime();
+
   // 8 save the state of the game into mongo
   await mongoClient.updateOneByObjectId('games', game._id, game);
 };

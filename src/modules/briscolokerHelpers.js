@@ -36,9 +36,13 @@ const formatOutput = async (token, mongoClient) => {
   const game = await getMyGameBro(token, mongoClient);
   const villan = game.players.filter(P => P.id !== token)[0];
   const hero = game.players.filter(P => P.id === token)[0];
+  const logs = game.logs.sort((L1, L2) => {
+    if (L1.time > L2.time) return -1;
+    return 1;
+  }).slice(0, 25);
   const gameState = {
     timer: game.timer,
-    logs: game.logs,
+    logs,
     villan: villan ? {
       name: villan.name ? villan.name : '',
       score: villan.score ? villan.score : 0,
@@ -70,20 +74,27 @@ const formatOutput = async (token, mongoClient) => {
 
 const sendAllTheGameStates = async (io, gameName, mongoClient) => {
   try {
-    const clients = Object.keys(io.sockets.adapter.rooms[gameName].sockets);
-    debug(clients, clients.length);
-    for (let idx = 0; idx < clients.length; idx++) {
-      // debug("idx",idx);
-      const client = io.sockets.connected[clients[idx]];
-      const clientToken = client.token;
-      debug(clientToken);
-      const gameState = await formatOutput(clientToken, mongoClient);
-      // console.log('gameState',gameState);
-      client.emit('game_state', { result: gameState.gameState });
+    // console.log('gameName', gameName);
+    // console.log('1', io);
+    // console.log('2', io.sockets.adapter);
+    // console.log('3', io.sockets.adapter.rooms[gameName]);
+    // console.log('4', io.sockets.adapter.rooms[gameName].sockets);
+    if (typeof io.sockets.adapter.rooms[gameName] !== 'undefined') {
+      const clients = Object.keys(io.sockets.adapter.rooms[gameName].sockets);
+      debug(clients, clients.length);
+      for (let idx = 0; idx < clients.length; idx++) {
+        // debug("idx",idx);
+        const client = io.sockets.connected[clients[idx]];
+        const clientToken = client.token;
+        debug(clientToken);
+        const gameState = await formatOutput(clientToken, mongoClient);
+        // console.log('gameState',gameState);
+        client.emit('game_state', { result: gameState.gameState });
+      }
     }
   } catch (e) {
     console.error(e);
-    throw e;
+    // throw e;
   }
 };
 
