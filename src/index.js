@@ -20,6 +20,7 @@ const betting = require('./modules/socketIo/betting');
 const playACard = require('./modules/socketIo/playACard');
 const fold = require('./modules/socketIo/fold');
 const validateToken = require('./modules/socketIo/validateToken');
+const stopLooking = require('./modules/socketIo/stopLooking');
 
 // API Modules
 const registerUser = require('./modules/API/registerUser');
@@ -153,6 +154,13 @@ io.on('connection', async (socket) => {
     if (userId !== null) await reconnectMe(socket, briscolokerMongoClient, userId);
   });
 
+  // triggered when the user stop looking for a game
+  socket.on('stop_looking', async (payload) => {
+    console.log('message for stop_looking payload', payload);
+    const userId = await validateToken(briscolokerMongoClient, payload.token, io, socket);
+    if (userId !== null) await stopLooking(briscolokerMongoClient, userId);
+  });
+
   // triggered when the browser goes to /game
   socket.on('table_ready', async (payload) => {
     console.log('message for table_ready payload', payload);
@@ -162,7 +170,6 @@ io.on('connection', async (socket) => {
 
   // triggerred when the player press play
   socket.on('join_lobby', async (payload) => {
-    // @todo: validate the tokens
     console.log('message for join_lobby', payload);
     const userId = await validateToken(briscolokerMongoClient, payload.token, io, socket);
     if (userId !== null) await joinLobby(socket, io, briscolokerMongoClient, userId);
