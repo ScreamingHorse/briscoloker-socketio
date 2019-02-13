@@ -54,7 +54,12 @@ app.post('/register', async (req, res) => {
   let httpStatus = 200;
   let token = [];
   try {
-    token = await registerUser(briscolokerMongoClient, req.body.username, req.body.password, req.body.email);
+    token = await registerUser(
+      briscolokerMongoClient,
+      req.body.username,
+      req.body.password,
+      req.body.email,
+    );
     response = {
       token,
     };
@@ -96,16 +101,16 @@ const timers = [];
 // this interval update all the timers for all existing games
 // the timers are part of the game object
 setInterval(async () => {
-  const cutoff = (new Date().getTime() - (30 * 1000)); // * 1000 to get the seconds
+  const cutoff = (new Date().getTime() - (50 * 1000)); // * 1000 to get the seconds
   const cutoffHuman = (new Date().getTime() - (5 * 60 * 1000));
   // debug('cutoff', cutoff);
   const games = await briscolokerMongoClient.getLimitlessStuffFromMongo(
     'games',
-    { $and : [ { timer: { '$lt': cutoff } }, { lastHumanMove: {'$gt': cutoffHuman} }] },
+    { $and: [{ timer: { $lt: cutoff } }, { lastHumanMove: { $gt: cutoffHuman } }] },
     {},
     {},
   );
-  //console.log('games', games.length);
+  // console.log('games', games.length);
   games.forEach(async (T) => {
     // debug(T.timer, T.name, T._id);
     // call the timeout logic

@@ -17,7 +17,7 @@ module.exports = (mongoClient, token) => {
         // map the data for the frontend
         // debug(userId[0]);
         const games = dataFromMongo.map((G) => {
-          debug(userId[0].username, G.gameWinner.id);
+          debug(userId[0].userId, G.gameWinner.id);
           return {
             didIwin: (userId[0].userId === G.gameWinner.id),
             winner: G.winnerOfTheWholeThing,
