@@ -118,3 +118,5 @@ Reduced the ammount of logs for a single game to 25 (to avoind slowing down the 
 Day 21
 
 Add creation date and lastLogin date to the userObject in Mongo
+Route to remove waiting room
+
