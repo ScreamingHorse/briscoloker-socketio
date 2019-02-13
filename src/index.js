@@ -54,7 +54,7 @@ app.post('/register', async (req, res) => {
   let httpStatus = 200;
   let token = [];
   try {
-    token = await registerUser(briscolokerMongoClient, req.body.username, req.body.password);
+    token = await registerUser(briscolokerMongoClient, req.body.username, req.body.password, req.body.email);
     response = {
       token,
     };

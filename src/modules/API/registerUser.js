@@ -2,7 +2,7 @@ const debug = require('debug')('briscoloker:registerUser');
 const crypto = require('crypto');
 const pbkdf2 = require('pbkdf2');
 
-module.exports = (mongoClient, username, password) => {
+module.exports = (mongoClient, username, password, email) => {
   debug('Register user');
   return new Promise(async (resolve, reject) => {
     if (process.env.FEATURE_REGISTRATION === 'on') {
@@ -24,6 +24,8 @@ module.exports = (mongoClient, username, password) => {
           username,
           password: hashedPassword,
           salt,
+          email,
+          creationDate: new Date(),
         };
         const userId = await mongoClient.insertOneThingInMongo('users', userObject);
         debug('userId', userId);

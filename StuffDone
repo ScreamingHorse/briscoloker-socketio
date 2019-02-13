@@ -114,3 +114,7 @@ Todo:
 Improved timeout
 Fixed the API for past games to work with the new token strategy
 Reduced the ammount of logs for a single game to 25 (to avoind slowing down the dom)
+
+Day 21
+
+Add creation date and lastLogin date to the userObject in Mongo
