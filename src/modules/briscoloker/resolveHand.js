@@ -234,10 +234,12 @@ module.exports = async (gameName, mongoClient) => {
     if (player1.chips === 0) {
       game.isTheGameFinished = true;
       game.winnerOfTheWholeThing = player2.name;
+      game.userIdOfTheWinnerOfTheWholeThing = player2.id;
     } else if (player2.chips === 0) {
       // player 2 is without chips => player 1 won
       game.isTheGameFinished = true;
       game.winnerOfTheWholeThing = player1.name;
+      game.userIdOfTheWinnerOfTheWholeThing = player1.id;
     }
   }
   debug('game.isTheRoundFinished', game.isTheRoundFinished);
