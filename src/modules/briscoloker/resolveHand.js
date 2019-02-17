@@ -1,5 +1,6 @@
 const debug = require('debug')('briscoloker:briscolokerHelpers:resolveHand');
 const getMyGameByName = require('./getMyGameByName');
+const updateRating = require('./updateRating');
 
 /**
  * array that contains the actual value of the cards
@@ -182,7 +183,8 @@ module.exports = async (gameName, mongoClient) => {
     + game.discardedCards.length
   );
   debug('cardsPlayed', cardsPlayed);
-  if (cardsPlayed === 40) {
+  // total card in the deck
+  if (cardsPlayed === 10) {
     debug('Game finished', player1.score, player2.score);
     game.isTheRoundFinished = true;
     // assign the sideBet
@@ -235,11 +237,15 @@ module.exports = async (gameName, mongoClient) => {
       game.isTheGameFinished = true;
       game.winnerOfTheWholeThing = player2.name;
       game.userIdOfTheWinnerOfTheWholeThing = player2.id;
+      // update or record rating
+      updateRating(player2, player1, mongoClient);
     } else if (player2.chips === 0) {
       // player 2 is without chips => player 1 won
       game.isTheGameFinished = true;
       game.winnerOfTheWholeThing = player1.name;
       game.userIdOfTheWinnerOfTheWholeThing = player1.id;
+      // update or record rating
+      updateRating(player1, player2, mongoClient);
     }
   }
   debug('game.isTheRoundFinished', game.isTheRoundFinished);

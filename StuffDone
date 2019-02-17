@@ -119,4 +119,3 @@ Day 21
 
 Add creation date and lastLogin date to the userObject in Mongo
 Route to remove waiting room
-

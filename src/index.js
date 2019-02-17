@@ -25,7 +25,7 @@ const stopLooking = require('./modules/socketIo/stopLooking');
 // API Modules
 const registerUser = require('./modules/API/registerUser');
 const loginUser = require('./modules/API/loginUser');
-const pastGames = require('./modules/API/pastGames');
+const userData = require('./modules/API/userData');
 
 
 app.post('/login', async (req, res) => {
@@ -75,16 +75,16 @@ app.post('/register', async (req, res) => {
     .json(response);
 });
 
-app.get('/past_games', async (req, res) => {
+app.get('/user_data', async (req, res) => {
   // awaiting the response from the registration module
   let response = {};
   let httpStatus = 200;
-  let games = '';
+  let userInfo = '';
   try {
     debug('headers', req.headers);
-    games = await pastGames(briscolokerMongoClient, req.headers['x-btoken']);
+    userInfo = await userData(briscolokerMongoClient, req.headers['x-btoken']);
     response = {
-      games,
+      userInfo,
     };
   } catch (error) {
     httpStatus = 500;
