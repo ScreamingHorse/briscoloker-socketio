@@ -26,6 +26,9 @@ module.exports = (mongoClient, username, password, email) => {
           salt,
           email,
           creationDate: new Date(),
+          wins: 0,
+          losses: 0,
+          rating: 1500,
         };
         const userId = await mongoClient.insertOneThingInMongo('users', userObject);
         debug('userId', userId);

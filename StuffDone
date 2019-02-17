@@ -119,3 +119,8 @@ Day 21
 
 Add creation date and lastLogin date to the userObject in Mongo
 Route to remove waiting room
+
+Day 22
+
+Changed the route from /past_game to /user_info
+Added user information for the endpoint /user_info
