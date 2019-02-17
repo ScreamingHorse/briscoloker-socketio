@@ -238,14 +238,14 @@ module.exports = async (gameName, mongoClient) => {
       game.winnerOfTheWholeThing = player2.name;
       game.userIdOfTheWinnerOfTheWholeThing = player2.id;
       // update or record rating
-      updateRating(player2, player1, mongoClient);
+      updateRating(player2.id, player1.id, mongoClient);
     } else if (player2.chips === 0) {
       // player 2 is without chips => player 1 won
       game.isTheGameFinished = true;
       game.winnerOfTheWholeThing = player1.name;
       game.userIdOfTheWinnerOfTheWholeThing = player1.id;
       // update or record rating
-      updateRating(player1, player2, mongoClient);
+      updateRating(player1.id, player2.id, mongoClient);
     }
   }
   debug('game.isTheRoundFinished', game.isTheRoundFinished);
