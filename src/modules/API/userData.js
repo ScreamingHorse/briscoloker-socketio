@@ -19,12 +19,17 @@ module.exports = (mongoClient, token) => {
         // map the data for the frontend
         // debug(userId[0]);
         const games = dataFromMongo.map((G) => {
-          debug(userId, G.gameWinner.id);
+          debug(userId, G.gameWinner.id, G.players);
+          const player = G.players.find(P => P.id === userId);
+          debug(player);
+          const { ratingChange } = player;
           return {
             didIwin: (userId === G.gameWinner.id),
             winner: G.winnerOfTheWholeThing,
             id: G._id,
             played: G.created,
+            gameType: G.gameType === 'ranked' ? 'ranked' : 'normal',
+            ratingChange,
           };
         });
         // get the user info

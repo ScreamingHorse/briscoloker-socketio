@@ -124,3 +124,8 @@ Day 22
 
 Changed the route from /past_game to /user_info
 Added user information for the endpoint /user_info
+
+Day 24
+
+Added the match and lobby type to allow different queues, created ranked and normal queue.
+Added game type and change in rating to user_data API
