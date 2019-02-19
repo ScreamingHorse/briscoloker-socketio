@@ -35,7 +35,7 @@ module.exports = async (roomName, mongoClient) => {
     // Step 1: Build the deck
     // cycling the suits (0->3)
     // remember the = for 40 cards!
-    for (let s = 0; s <= 3; s++) {
+    for (let s = 0; s < 1; s++) {
       // values (1 -> 10)
       for (let v = 1; v <= 10; v++) {
         game.deck.push({

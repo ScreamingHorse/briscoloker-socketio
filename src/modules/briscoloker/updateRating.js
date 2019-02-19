@@ -9,7 +9,7 @@ module.exports = async (winnerId, loserId, mongoClient) => {
       {},
       1,
     );
-    winner = winner[0];
+    [winner] = winner;
 
     let loser = await mongoClient.getStuffFromMongo(
       'users',
@@ -17,19 +17,24 @@ module.exports = async (winnerId, loserId, mongoClient) => {
       {},
       1,
     );
-    loser = loser[0];
-
+    [loser] = loser;
     debug(winner);
     debug(loser);
+    let winnerPoints;
+    let loserPoints;
     // 1 calculate the change in rating
     if (winner.rating > loser.rating) {
       // the winner was already higher rating
       winner.rating += 20;
       loser.rating -= 20;
+      winnerPoints = 20;
+      loserPoints = -20;
     } else {
       // the winner was lower rating
       winner.rating += 30;
       loser.rating -= 30;
+      winnerPoints = 30;
+      loserPoints = -30;
     }
     // 2 update wins and losses
     winner.wins++;
@@ -39,7 +44,11 @@ module.exports = async (winnerId, loserId, mongoClient) => {
     // 3 update the mongoDB
     await mongoClient.updateOneByObjectId('users', winner._id, winner);
     await mongoClient.updateOneByObjectId('users', loser._id, loser);
+    // 4 return values
+    // console.log(winnerPoints, loserPoints);
+    return [winnerPoints, loserPoints];
   } catch (e) {
     console.error(e);
+    throw Error('e');
   }
 };

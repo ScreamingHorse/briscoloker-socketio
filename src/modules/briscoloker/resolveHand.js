@@ -184,7 +184,7 @@ module.exports = async (gameName, mongoClient) => {
   );
   debug('cardsPlayed', cardsPlayed);
   // total card in the deck
-  if (cardsPlayed === 40) {
+  if (cardsPlayed === 10) {
     debug('Game finished', player1.score, player2.score);
     game.isTheRoundFinished = true;
     // assign the sideBet
@@ -238,14 +238,22 @@ module.exports = async (gameName, mongoClient) => {
       game.winnerOfTheWholeThing = player2.name;
       game.userIdOfTheWinnerOfTheWholeThing = player2.id;
       // update or record rating
-      updateRating(player2.id, player1.id, mongoClient);
+      if (game.gameType === 'ranked') {
+        const result = await updateRating(player2.id, player1.id, mongoClient);
+        console.log(result);
+        [player2.ratingChange, player1.ratingChange] = result;
+      }
     } else if (player2.chips === 0) {
       // player 2 is without chips => player 1 won
       game.isTheGameFinished = true;
       game.winnerOfTheWholeThing = player1.name;
       game.userIdOfTheWinnerOfTheWholeThing = player1.id;
       // update or record rating
-      updateRating(player1.id, player2.id, mongoClient);
+      if (game.gameType === 'ranked') {
+        const result = await updateRating(player1.id, player2.id, mongoClient);
+        console.log(result);
+        [player1.ratingChange, player2.ratingChange] = result;
+      }
     }
   }
   debug('game.isTheRoundFinished', game.isTheRoundFinished);

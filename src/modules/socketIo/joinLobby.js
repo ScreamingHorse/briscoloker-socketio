@@ -12,9 +12,10 @@ const getARoom = () => {
   return name;
 };
 
-module.exports = async (socket, io, mongoClient, token) => {
+module.exports = async (socket, io, mongoClient, token, lobbyType) => {
   debug('Need to join a room');
   try {
+    const gameType = lobbyType === 'ranked' ? 'ranked' : 'normal';
     // check if the player is already in a match
     const playersGame = await briscolokerHelpers.getMyGameBro(token, mongoClient);
     debug('playersGame', playersGame);
@@ -33,7 +34,7 @@ module.exports = async (socket, io, mongoClient, token) => {
     // (try to) find an open room
     const openRooms = await mongoClient.getStuffFromMongo(
       'openRooms',
-      {},
+      { gameType },
       { created: 1 },
       1,
     );
@@ -101,6 +102,7 @@ module.exports = async (socket, io, mongoClient, token) => {
       console.log('user', user);
       const roomObject = {
         name: roomName,
+        gameType,
         created: new Date(),
         logs: [
           {
@@ -113,6 +115,7 @@ module.exports = async (socket, io, mongoClient, token) => {
             id: token,
             name: user[0].username,
             isReady: false,
+            userRating: user[0].rating,
           },
         ],
       };

@@ -10,7 +10,7 @@ module.exports = async (socket, mongoClient, token) => {
     const myRoom = myGame.name;
     socket.join(myRoom);
   } catch (e) {
-    console.log(e);
+    // console.log(e);
     // game not found, emit false to villan_info
     // (the topic that the client is listening to start the game)
     socket.emit('game_state', { result: false });

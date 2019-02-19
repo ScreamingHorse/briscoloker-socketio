@@ -172,7 +172,7 @@ io.on('connection', async (socket) => {
   socket.on('join_lobby', async (payload) => {
     console.log('message for join_lobby', payload);
     const userId = await validateToken(briscolokerMongoClient, payload.token, io, socket);
-    if (userId !== null) await joinLobby(socket, io, briscolokerMongoClient, userId);
+    if (userId !== null) await joinLobby(socket, io, briscolokerMongoClient, userId, payload.lobby);
   });
 
   // the client send a message when the player is betting
