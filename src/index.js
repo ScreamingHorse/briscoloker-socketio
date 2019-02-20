@@ -21,6 +21,7 @@ const playACard = require('./modules/socketIo/playACard');
 const fold = require('./modules/socketIo/fold');
 const validateToken = require('./modules/socketIo/validateToken');
 const stopLooking = require('./modules/socketIo/stopLooking');
+const broadcastChatMessage = require('./modules/socketIo/broadcastChatMessage');
 
 // API Modules
 const registerUser = require('./modules/API/registerUser');
@@ -194,6 +195,13 @@ io.on('connection', async (socket) => {
     console.log('message for play_a_card', payload);
     const userId = await validateToken(briscolokerMongoClient, payload.token, io, socket);
     if (userId !== null) await playACard(io, briscolokerMongoClient, userId, payload.card, true);
+  });
+
+  // the client send a chat message to the opponnet
+  socket.on('chat', async (payload) => {
+    console.log('message for chat', payload);
+    const userId = await validateToken(briscolokerMongoClient, payload.token, io, socket);
+    if (userId !== null) await broadcastChatMessage(io, briscolokerMongoClient, payload.token, socket, userId, payload.message);
   });
 });
 

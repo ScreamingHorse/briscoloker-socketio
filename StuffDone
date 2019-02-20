@@ -129,3 +129,7 @@ Day 24
 
 Added the match and lobby type to allow different queues, created ranked and normal queue.
 Added game type and change in rating to user_data API
+
+Day 25
+
+Create the chat server

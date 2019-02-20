@@ -4,7 +4,7 @@ module.exports = async (token, mongoClient) => {
   try {
     const searchObject = { 'players.id': { $in: [token] } };
     // we are looking for any game where one of the players is the token
-    debug('searchObject', searchObject);
+    console.log('searchObject', searchObject);
     const myGame = await mongoClient.getStuffFromMongo('games', searchObject, {}, 1);
     if (myGame.length === 1) {
       return myGame[0];
